@@ -20,6 +20,8 @@ Based on a [RFC4180][RFC4180] given in the activity readme file of this course, 
 
 ![Finite State Machine validating a CSV file](fsm_csv_syntax_validation.svg)
 
+(SVG created using [Finite State Machine Designer][FSMD])
+
 Unfortunately, this model is not able to express rule 2, 3 and 4 of [RFC4180][RFC4180]. Three extra rules are added to address this:
 
 1. Even if `EOF` is reached without preceding `CRLF`, the algorithm assumes that `CRLF` exists at the end of the file.
@@ -73,3 +75,4 @@ WIP
 
 
 [RFC4180]: https://tools.ietf.org/html/rfc4180
+[FSMD]: http://madebyevan.com/fsm/
