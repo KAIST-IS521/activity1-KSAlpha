@@ -54,7 +54,7 @@ Any exceptions results in the program to exit with status code 1. Otherwise, the
 
 ### Printing extracted fields
 
-The program creates a string by joining extracted fields with desired line break (i.e., `LF` in Unix, `CRLF` in Windows) and writes out the string to `stdout`. Unexpected low-level I/O exceptions during write is not handled in the algorithm.
+The program creates a string by joining extracted fields with desired line break (i.e., `LF` in Unix, `CRLF` in Windows), writes out the string to `stdout` and exits with status code 0. Unexpected low-level I/O exceptions during write is not handled in the algorithm.
 
 
 
