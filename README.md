@@ -22,15 +22,15 @@ Based on a [RFC4180][RFC4180] given in the activity readme file of this course, 
 
 Unfortunately, this model is not able to express rule 2, 3 and 4 of [RFC4180][RFC4180]. Three extra rules are added to address this:
 
-1. Even if `EOF` is reached without preceding `CRLF`, the algorithm will assume that `CRLF` exists at the end of the file.
+1. Even if `EOF` is reached without preceding `CRLF`, the algorithm assumes that `CRLF` exists at the end of the file.
 
    This handles rule 2 (i.e., optional `CRLF` ending of the last record).
 
-2. Optional header record will be ignored as it doesn't affect the output of the program (Also, there is no deterministic way to recover an intended MIME type using only a file).
+2. Optional header record is ignored as it doesn't affect the output of the program (Also, there is no deterministic way to recover an intended MIME type using only a file).
 
    This resolves rule 3 (i.e., optional header record recognized by MIME type definition in the beginning of the file).
 
-3. The number of fields in each record will be counted and compared after the FSM algorithm terminates with `Ok` state.
+3. Fields in each record are counted and compared after the FSM algorithm terminates with `Ok` state.
 
    This addresses rule 4 (i.e., one or more fields in each record and equal number of fields in each record).
 
