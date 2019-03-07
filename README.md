@@ -76,7 +76,7 @@ The program creates a string by joining extracted fields with a desired line bre
 
 ## Running the program
 
-This program is written in F# and is targeted to be run on .NET Core 2.2 runtime.
+This program is written in F# and is targeted to be run on [.NET][dotnet] Core 2.2 runtime.
 
 You can run this program with the following commands:
 
@@ -93,3 +93,4 @@ $ dotnet build/Activity1.dll your_file.csv 1
 
 [RFC4180]: https://tools.ietf.org/html/rfc4180
 [FSMD]: http://madebyevan.com/fsm/
+[dotnet]: http://dot.net/
