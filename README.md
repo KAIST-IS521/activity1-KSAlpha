@@ -38,15 +38,13 @@ Unfortunately, this model is not able to express rule 2, 3 and 4 of [RFC4180][RF
 
 `Ok` state continues the algorithm and `Err` state terminates the program with status code 1.
 
-WIP: Implement algorithm
-
 
 
 ### Extracting fields of the specific column from records
 
-Fields and records are parsed using the output of the FSM of the previous step (i.e., CSV validation). Parse result is expected to have a type of `(string list) list`, which inner lists are lists of fields and outer list is a list of records. This process is expected to be merged into the algorithm of the previous step.
+Fields and records are parsed using the output of the FSM of the previous step (i.e., CSV validation). Parse result is expected to have a type of `string[] list`, which inner lists are lists of fields and outer list is a list of records. This process is expected to be merged into the algorithm of the previous step.
 
-Wanted fields are extracted by mapping inner lists into fields, which is achieved by selecting the entry using the specific index of the list. In this process, `IndexOutOfBounds` exception may occur due to bad user inputs.
+Wanted fields are extracted by mapping inner lists into fields, which is achieved by selecting the entry using the specific index of the list. In this process, `IndexOutOfRange` exception may occur due to bad user inputs.
 
 Any exceptions result in exiting with status code 1. Otherwise, the algorithm continues.
 
@@ -64,13 +62,30 @@ The program creates a string by joining extracted fields with a desired line bre
 
   The naïve approach in memory management of this algorithm may cause an out-of-memory (OOM) exception when handling extremely large files.
 
-- WIP
+- Relax line break condition
+
+  The algorithm rejects `LF`, which is a default line break in Unix systems, as a record delimiter. This design was chosen to strictly follow [RFC4180][RFC4180]. However, this can result in unnecessarily strict behavior to users.
+
+- Better error handling
+
+  Some violations are squashed into an indistinguishable `Invalid` state. This can be improved by handling each violations respectively.
 
 
 
 ## Running the program
 
-WIP
+This program is written in F# and is targeted to be run on .NET Core 2.2 runtime.
+
+You can run this program with the following commands:
+
+```bash
+$ cd Activity1
+$ dotnet run your_file.csv 1
+# or
+$ mkdir build
+$ dotnet build -o ../build
+$ dotnet build/Activity1.dll your_file.csv 1
+```
 
 
 
