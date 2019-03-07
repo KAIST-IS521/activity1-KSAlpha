@@ -44,7 +44,7 @@ Unfortunately, this model is not able to express rule 2, 3 and 4 of [RFC4180][RF
 
 ### Extracting fields of the specific column from records
 
-Fields and records are parsed using the output of the FSM of the previous step (i.e., CSV validation). Parse result is expected to have a type of `string[] list`, which inner lists are lists of fields and outer list is a list of records. This process is expected to be merged into the algorithm of the previous step.
+Fields and records are parsed using the output of the FSM of the previous step (i.e., CSV validation). Parse result is expected to have a type of `string[] list`, which inner arrays are arrays of fields and outer list is a list of records. This process is expected to be merged into the algorithm of the previous step.
 
 Wanted fields are extracted by mapping inner lists into fields, which is achieved by selecting the entry using the specific index of the list. In this process, `IndexOutOfRange` exception may occur due to bad user inputs.
 
