@@ -8,7 +8,7 @@ type State = {
     record: string list
     field: char list
     status: Status
-    input: char option list
+    inputs: char list
 }
 with
     static member Default = {
@@ -16,29 +16,29 @@ with
         record = []
         field = []
         status = Unwrapped
-        input = List.empty
+        inputs = List.empty
     }
 
 let pushInput field c =
-    c::field
+    c :: field
 
 let commitField field =
     field |> List.rev |> Array.ofList |> String
 
 let pushField fields field =
-    field::fields
+    field :: fields
 
 let commitRecord record =
     record |> List.rev |> Array.ofList
 
 let pushRecord records record =
-    record::records
+    record :: records
 
 let commitRecords records =
     records |> List.rev
 
 let finalizeRecords state =
-    let { records=records; record=record; field=field } = state
+    let { records = records; record = record; field = field } = state
 
     // Handle optional CRLF ending of the last record
     let records =
@@ -52,19 +52,33 @@ let finalizeRecords state =
     commitRecords records
 
 let processLf inputs =
-    let nextHead = List.tryHead inputs
-    match nextHead with
-    | Some(Some('\n')) -> Some(List.tail inputs)
+    match inputs with
+    | '\n' :: t -> Some(t)
     | _ -> None
 
 let unwrappedTransition state =
-    let { records=records; record=record; field=field; input=input } = state
-    let inputHead = List.head input
-    let nextInput = List.tail input
-    match inputHead with
-    | Some('\r') ->
-        match processLf nextInput with
-        | Some(nextInput) ->
+    let { records = records; record = record; field = field; inputs = inputs } = state
+    match inputs with
+    | '"' :: remainingInputs ->
+        { state with
+            status = Wrapped
+            inputs = remainingInputs
+        }
+    | ',' :: remainingInputs ->
+        let newRecord =
+            field
+            |> commitField
+            |> pushField record
+
+        { state with
+            record = newRecord
+            field = []
+            status = Unwrapped
+            inputs = remainingInputs
+        }
+    | '\r' :: remainingInputs ->
+        match processLf remainingInputs with
+        | Some(remainingInputs) ->
             let newRecords =
                 field
                 |> commitField
@@ -77,76 +91,56 @@ let unwrappedTransition state =
                 record = []
                 field = []
                 status = Unwrapped
-                input = nextInput
+                inputs = remainingInputs
             }
-        | None -> { state with status = Invalid; input = nextInput }
-    | Some('\n') ->
-        { state with status = Invalid; input = nextInput }
-    | Some(',') ->
-        let newRecord =
-            field
-            |> commitField
-            |> pushField record
-
-        { state with
-            record = newRecord
-            field = []
-            status = Unwrapped
-            input = nextInput
-        }
-    | Some('"') ->
-        { state with
-            status = Wrapped
-            input = nextInput
-        }
-    | Some(c) ->
+        | None -> { state with status = Invalid; inputs = remainingInputs }
+    | '\n' :: remainingInputs ->
+        { state with status = Invalid; inputs = remainingInputs }
+    | c :: remainingInputs ->
         let newField = pushInput field c
         { state with
             field = newField
             status = Unwrapped
-            input = nextInput
+            inputs = remainingInputs
         }
-    | None ->
+    // EOF
+    | [] ->
         let newRecords = finalizeRecords state
         { state with
             records = newRecords
             record = []
             field = []
             status = Ok
-            input = nextInput
         }
 
 let wrappedTransition state =
-    let { field=field; input=input } = state
-    let inputHead = List.head input
-    let nextInput = List.tail input
-    match inputHead with
-    | Some('"') ->
+    let { field = field; inputs = inputs } = state
+    match inputs with
+    | '"' :: remainingInputs ->
         { state with
             status = Rewrappable
-            input = nextInput
+            inputs = remainingInputs
         }
-    | Some(c) ->
+    | c :: remainingInputs ->
         let newField = pushInput field c
         { state with
             field = newField
             status = Wrapped
-            input = nextInput
+            inputs = remainingInputs
         }
-    | None ->
+    // EOF
+    | [] ->
         { state with
             status = Invalid
-            input = nextInput
+            inputs = []
         }
 
 let rewrappableTransition state =
-    let { records=records; record=record; field=field; input=input } = state
-    let inputHead = List.head input
-    let nextInput = List.tail input
-    match inputHead with
-    | Some('\r') ->
-        match processLf nextInput with
-        | Some(nextInput) ->
+    let { records = records; record = record; field = field; inputs = inputs } = state
+    match inputs with
+    | '\r' :: remainingInputs ->
+        match processLf remainingInputs with
+        | Some(remainingInputs) ->
             let newRecords =
                 field
                 |> commitField
@@ -159,10 +153,10 @@ let rewrappableTransition state =
                 record = []
                 field = []
                 status = Unwrapped
-                input = nextInput
+                inputs = remainingInputs
             }
-        | None -> { state with status = Invalid; input = nextInput }
-    | Some(',') ->
+        | None -> { state with status = Invalid; inputs = remainingInputs }
+    | ',' :: remainingInputs ->
         let newRecord =
             field
             |> commitField
@@ -172,35 +166,35 @@ let rewrappableTransition state =
             record = newRecord
             field = []
             status = Unwrapped
-            input = nextInput
+            inputs = remainingInputs
         }
-    | Some('"') ->
+    | '"' :: remainingInputs ->
         let newField = pushInput field '"'
         { state with
             field = newField
             status = Wrapped
-            input = nextInput
+            inputs = remainingInputs
         }
-    | Some(c) ->
+    | c :: remainingInputs ->
         { state with
             status = Invalid
-            input = nextInput
+            inputs = remainingInputs
         }
-    | None ->
+    // EOF
+    | [] ->
         let newRecords = finalizeRecords state
         { state with
             records = newRecords
             record = []
             field = []
             status = Ok
-            input = nextInput
         }
 
 let invalidTransition state =
-    { state with input = List.empty }
+    { state with inputs = List.empty }
 
 let okTransition state =
-    { state with status = Invalid; input = List.empty }
+    { state with status = Invalid; inputs = List.empty }
 
 let transitionFunction status =
     match status with

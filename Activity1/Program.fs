@@ -22,13 +22,9 @@ let main argv =
     let fileContents =
         filename
         |> File.ReadAllText
-        |> Seq.map (fun c -> Some(c))
         |> List.ofSeq
 
-    let initialState = {
-        State.Default with
-            input = fileContents @ [ None ]
-    }
+    let initialState = { State.Default with inputs = fileContents }
     let { records=records; status=status } = validateAndParse initialState
     if status <> Ok then
         fail "Invalid CSV format"
