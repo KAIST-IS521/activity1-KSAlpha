@@ -4,7 +4,7 @@ open System
 
 type Status = Unwrapped | Wrapped | Rewrappable | Ok | Invalid
 type State = {
-    records: string list list
+    records: string[] list
     record: string list
     field: char list
     status: Status
@@ -29,7 +29,7 @@ let pushField fields field =
     field::fields
 
 let commitRecord record =
-    record |> List.rev
+    record |> List.rev |> Array.ofList
 
 let pushRecord records record =
     record::records
@@ -216,8 +216,8 @@ let rec validateAndParse state =
         let records = state.records
         if List.isEmpty records then state
         else
-            let count = records |> List.head |> List.length
-            let rule4 = records |> List.map List.length |> List.forall ((=) count)
+            let count = records |> List.head |> Array.length
+            let rule4 = records |> List.map Array.length |> List.forall ((=) count)
             if rule4 then state
             else { state with status = Invalid }
     | status ->
