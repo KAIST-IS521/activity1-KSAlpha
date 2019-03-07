@@ -36,7 +36,7 @@ Unfortunately, this model is not able to express rule 2, 3 and 4 of [RFC4180][RF
 
    This addresses rule 4 (i.e., one or more fields in each record and equal number of fields in each record).
 
-`Ok` state continues the algorithm and `Err` state exits the program with status code 1.
+`Ok` state continues the algorithm and `Err` state terminates the program with status code 1.
 
 WIP: Implement algorithm
 
@@ -44,17 +44,17 @@ WIP: Implement algorithm
 
 ### Extracting fields of the specific column from records
 
-Fields and records are parsed using the output of the FSM of the previous step (i.e., CSV validation). Parse result is expected to have a type of `(string list) list`, which inner lists are lists of fields and outer list is a list of records. This process is expected to be merged in to the algorithm of the previous step.
+Fields and records are parsed using the output of the FSM of the previous step (i.e., CSV validation). Parse result is expected to have a type of `(string list) list`, which inner lists are lists of fields and outer list is a list of records. This process is expected to be merged into the algorithm of the previous step.
 
-Wanted fields are extracted by mapping inner lists into fields, which is achieved by selecting the entry using the specific index of the list. In this process, `ListOutOfBounds` exception may occur due to bad user inputs.
+Wanted fields are extracted by mapping inner lists into fields, which is achieved by selecting the entry using the specific index of the list. In this process, `IndexOutOfBounds` exception may occur due to bad user inputs.
 
-Any exceptions results in the program to exit with status code 1. Otherwise, the algorithm continues.
+Any exceptions result in exiting with status code 1. Otherwise, the algorithm continues.
 
 
 
 ### Printing extracted fields
 
-The program creates a string by joining extracted fields with desired line break (i.e., `LF` in Unix, `CRLF` in Windows), writes out the string to `stdout` and exits with status code 0. Unexpected low-level I/O exceptions during write is not handled in the algorithm.
+The program creates a string by joining extracted fields with a desired line break (i.e., `LF` in Unix, `CRLF` in Windows), writes out the string to `stdout` and exits with status code 0. Unexpected low-level I/O exceptions during write is not handled in the algorithm.
 
 
 
