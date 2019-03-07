@@ -212,7 +212,14 @@ let transitionFunction status =
 
 let rec validateAndParse state =
     match state.status with
-    | Ok | Invalid -> state
+    | Ok | Invalid ->
+        let records = state.records
+        if List.isEmpty records then state
+        else
+            let count = records |> List.head |> List.length
+            let rule4 = records |> List.map List.length |> List.forall ((=) count)
+            if rule4 then state
+            else { state with status = Invalid }
     | status ->
         let transition = transitionFunction status
         state |> transition |> validateAndParse
