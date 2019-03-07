@@ -1,6 +1,5 @@
-﻿open System
+open System
 open System.IO
-
 open CsvReader
 
 let fail msg =
@@ -14,8 +13,7 @@ let intOrFail (i: String) =
 
 [<EntryPoint>]
 let main argv =
-    if Array.length argv <> 2 then
-        fail "Unexpected argument count"
+    if Array.length argv <> 2 then fail "Unexpected argument count"
 
     let columnIndex = intOrFail argv.[1] - 1
     let filename = argv.[0]
@@ -25,10 +23,8 @@ let main argv =
         |> List.ofSeq
 
     let initialState = { State.Default with inputs = fileContents }
-    let { records=records; status=status } = validateAndParse initialState
-    if status <> Ok then
-        fail "Invalid CSV format"
-
+    let { records = records; status = status } = validateAndParse initialState
+    if status <> Ok then fail "Invalid CSV format"
     let wantedFields =
         try records |> List.map (Array.item columnIndex)
         with

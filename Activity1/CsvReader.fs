@@ -9,8 +9,7 @@ type State = {
     field: char list
     status: Status
     inputs: char list
-}
-with
+} with
     static member Default = {
         records = []
         record = []
@@ -19,23 +18,13 @@ with
         inputs = List.empty
     }
 
-let pushInput field c =
-    c :: field
+let pushInput field c = c :: field
+let pushField fields field = field :: fields
+let pushRecord records record = record :: records
 
-let commitField field =
-    field |> List.rev |> Array.ofList |> String
-
-let pushField fields field =
-    field :: fields
-
-let commitRecord record =
-    record |> List.rev |> Array.ofList
-
-let pushRecord records record =
-    record :: records
-
-let commitRecords records =
-    records |> List.rev
+let commitField field = field |> List.rev |> Array.ofList |> String
+let commitRecord record = record |> List.rev |> Array.ofList
+let commitRecords records = records |> List.rev
 
 let finalizeRecords state =
     let { records = records; record = record; field = field } = state
@@ -190,11 +179,9 @@ let rewrappableTransition state =
             status = Ok
         }
 
-let invalidTransition state =
-    { state with inputs = List.empty }
+let invalidTransition state = { state with inputs = List.empty }
 
-let okTransition state =
-    { state with status = Invalid; inputs = List.empty }
+let okTransition state = { state with status = Invalid; inputs = List.empty }
 
 let transitionFunction status =
     match status with
@@ -210,8 +197,15 @@ let rec validateAndParse state =
         let records = state.records
         if List.isEmpty records then state
         else
-            let count = records |> List.head |> Array.length
-            let rule4 = records |> List.map Array.length |> List.forall ((=) count)
+            let count =
+                records
+                |> List.head
+                |> Array.length
+            let rule4 =
+                records
+                |> List.map Array.length
+                |> List.forall ((=) count)
+
             if rule4 then state
             else { state with status = Invalid }
     | status ->
