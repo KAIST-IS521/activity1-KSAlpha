@@ -20,6 +20,8 @@ Based on a [RFC4180][RFC4180] given in the activity readme file of this course, 
 
 ![Finite State Machine validating a CSV file](fsm_csv_syntax_validation.svg)
 
+Note: `LF` without preceding `CR` in state `U` will be rejected in the algorithm even it is not drawn in this figure.
+
 (SVG created using [Finite State Machine Designer][FSMD])
 
 Unfortunately, this model is not able to express rule 2, 3 and 4 of [RFC4180][RFC4180]. Three extra rules are added to address this:

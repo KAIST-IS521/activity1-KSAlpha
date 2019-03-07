@@ -18,7 +18,7 @@
 	<text x="95.5" y="442.5" font-family="Times New Roman" font-size="20">char/char</text>
 	<polygon fill="black" stroke-width="1" points="176.023,375.163 166.671,376.409 173.045,384.115"/>
 	<path stroke="black" stroke-width="1" fill="none" d="M 176.278,329.62 A 22.5,22.5 0 1 1 201.969,323.326"/>
-	<text x="10.5" y="270.5" font-family="Times New Roman" font-size="20">LF/FIELD+RECORD</text>
+	<text x="10.5" y="270.5" font-family="Times New Roman" font-size="20">CRLF/FIELD+RECORD</text>
 	<polygon fill="black" stroke-width="1" points="201.969,323.326 209.624,317.812 200.368,314.028"/>
 	<path stroke="black" stroke-width="1" fill="none" d="M 168.703,365.725 A 22.5,22.5 0 1 1 168.703,339.275"/>
 	<text x="49.5" y="358.5" font-family="Times New Roman" font-size="20">,/FIELD</text>
@@ -49,12 +49,12 @@
 	<text x="306.5" y="394.5" font-family="Times New Roman" font-size="20">,/FIELD</text>
 	<path stroke="black" stroke-width="1" fill="none" d="M 224.703,345.645 A 581.721,581.721 0 0 1 461.297,345.645"/>
 	<polygon fill="black" stroke-width="1" points="224.703,345.645 233.552,348.913 231.519,339.122"/>
-	<text x="245.5" y="324.5" font-family="Times New Roman" font-size="20">LF/FIELD+RECORD</text>
+	<text x="230.5" y="324.5" font-family="Times New Roman" font-size="20">CRLF/FIELD+RECORD</text>
 	<path stroke="black" stroke-width="1" fill="none" d="M 309.283,177.008 A 22.5,22.5 0 1 1 304.873,150.928"/>
 	<text x="168.5" y="179.5" font-family="Times New Roman" font-size="20">char/char</text>
 	<polygon fill="black" stroke-width="1" points="304.873,150.928 299.93,142.893 295.484,151.85"/>
 	<path stroke="black" stroke-width="1" fill="none" d="M 308.869,142.58 A 22.5,22.5 0 1 1 331.948,129.657"/>
-	<text x="236.5" y="91.5" font-family="Times New Roman" font-size="20">LF/LF</text>
+	<text x="236.5" y="91.5" font-family="Times New Roman" font-size="20">CRLF/CRLF</text>
 	<polygon fill="black" stroke-width="1" points="331.948,129.657 337.854,122.301 327.923,121.125"/>
 	<path stroke="black" stroke-width="1" fill="none" d="M 341.662,130.753 A 22.5,22.5 0 1 1 361.282,148.493"/>
 	<text x="383.5" y="100.5" font-family="Times New Roman" font-size="20">,/,</text>
